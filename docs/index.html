@@ -223,6 +223,7 @@
     <a href="#operations">營運端</a>
     <a href="#costs">成本端</a>
     <a href="#actions">行動建議</a>
+    <a href="#seasonal">季節食材</a>
     <a href="#sessions">Session 筆記</a>
   </div>
 
@@ -414,6 +415,139 @@
     </div>
   </div>
 
+  <!-- Seasonal Ingredients -->
+  <div id="seasonal">
+    <div class="section-title"><span class="icon">🌱</span> 當季食材分析與全年降本策略</div>
+
+    <div class="insight">📊 <strong>資料說明：</strong>從 POS「品項」欄位萃取食材關鍵字，計算各月日均出現次數（已按各月天數標準化）。觀測期 2025-11 ~ 2026-02，涵蓋秋冬季節。</div>
+
+    <h3>現有食材月份分布（日均標準化）</h3>
+    <div class="card">
+      <div class="card-header">🔬 各食材月均使用率 × 是否符合當季</div>
+      <table>
+        <thead><tr><th>食材</th><th class="num">11月</th><th class="num">12月</th><th class="num">1月</th><th class="num">2月</th><th>趨勢</th><th>當季符合度</th></tr></thead>
+        <tbody>
+          <tr><td>廣島牡蠣</td><td class="num">1.00</td><td class="num">0.46</td><td class="num">0.90</td><td class="num down">0.37</td><td>↘</td><td><span class="up">✅ 冬季產季（10–3月）</span></td></tr>
+          <tr><td>菇類</td><td class="num">3.33</td><td class="num">4.31</td><td class="num up">5.32</td><td class="num">4.58</td><td>↗</td><td><span class="up">✅ 秋冬菇類盛產季</span></td></tr>
+          <tr><td>鮮蝦</td><td class="num">1.33</td><td class="num">1.85</td><td class="num">1.58</td><td class="num up">2.37</td><td>↗</td><td><span class="neutral">⚠️ 冬蝦多養殖，成本穩定</span></td></tr>
+          <tr><td>鯖魚</td><td class="num">0.83</td><td class="num">0.54</td><td class="num">0.45</td><td class="num">0.68</td><td>↘</td><td><span class="up">✅ 秋冬油脂豐厚（10–2月）</span></td></tr>
+          <tr><td>薑燒豬肉</td><td class="num">0.83</td><td class="num">0.46</td><td class="num">0.61</td><td class="num down">0.37</td><td>↘</td><td><span class="neutral">⚠️ 薑冬季最暖胃，建議加強曝光</span></td></tr>
+          <tr><td>湯圓</td><td class="num">0.00</td><td class="num up">0.96</td><td class="num">0.29</td><td class="num">0.16</td><td>↗</td><td><span class="up">✅ 冬至節令食品（12月峰）</span></td></tr>
+          <tr><td>生菜/沙拉</td><td class="num">0.83</td><td class="num">1.31</td><td class="num">1.03</td><td class="num">1.11</td><td>→</td><td><span class="up">✅ 冬季葉菜台灣旺季</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Seasonal Calendar -->
+    <h3>全年當季食材行事曆（台灣中和地區）</h3>
+    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:16px;margin-bottom:24px;">
+
+      <div class="card">
+        <div class="card-header" style="border-color:#4ade80;background:rgba(74,222,128,0.08)">🌸 春季（3–5月）</div>
+        <table>
+          <thead><tr><th>食材</th><th>建議應用</th></tr></thead>
+          <tbody>
+            <tr><td>🎋 嫩筍/桂竹筍</td><td>筍絲炒豬肉定食</td></tr>
+            <tr><td>🍓 草莓</td><td>草莓氣泡飲、甜點</td></tr>
+            <tr><td>🫛 荷蘭豆/豌豆苗</td><td>嗆鍋麵配料、沙拉</td></tr>
+            <tr><td>🍍 鳳梨</td><td>鳳梨氣泡飲</td></tr>
+            <tr><td>🦐 櫻花蝦</td><td>炊飯、烏龍麵配料</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-header" style="border-color:#fb923c;background:rgba(251,146,60,0.08)">☀️ 夏季（6–8月）</div>
+        <table>
+          <thead><tr><th>食材</th><th>建議應用</th></tr></thead>
+          <tbody>
+            <tr><td>🌽 玉米</td><td>玉米濃湯、炒烏龍配料</td></tr>
+            <tr><td>🍆 茄子</td><td>麻婆茄子套餐</td></tr>
+            <tr><td>🥒 絲瓜</td><td>絲瓜蛤蜊麵（替換進口櫛瓜）</td></tr>
+            <tr><td>🐟 旗魚/鬼頭刀</td><td>夏季魚定食</td></tr>
+            <tr><td>🍅 鮮番茄</td><td>番茄牛肉湯醬汁</td></tr>
+            <tr><td>🍈 百香果</td><td>氣泡飲（已有！延續）</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-header" style="border-color:#f7c948;background:rgba(247,201,72,0.08)">🍂 秋季（9–11月）</div>
+        <table>
+          <thead><tr><th>食材</th><th>建議應用</th></tr></thead>
+          <tbody>
+            <tr><td>🍠 地瓜</td><td>地瓜飯、烤地瓜甜點</td></tr>
+            <tr><td>🫙 芋頭</td><td>芋泥甜點、芋頭丼</td></tr>
+            <tr><td>🐟 秋刀魚</td><td>秋刀魚定食（替換鯖魚）</td></tr>
+            <tr><td>🥬 高麗菜</td><td>泡菜原料（10月谷底價）</td></tr>
+            <tr><td>🌰 栗子</td><td>栗子燉雞套餐</td></tr>
+            <tr><td>🦪 廣島牡蠣</td><td>提前上架（10月最低進貨價）</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-header" style="border-color:#7c6af7;background:rgba(124,106,247,0.08)">❄️ 冬季（12–2月）已驗證</div>
+        <table>
+          <thead><tr><th>食材</th><th>狀態</th></tr></thead>
+          <tbody>
+            <tr><td>🦪 廣島牡蠣</td><td><span class="up">✅ 持續維持</span></td></tr>
+            <tr><td>🍄 菇類</td><td><span class="up">✅ 持續，可推主題週</span></td></tr>
+            <tr><td>🍡 湯圓</td><td><span class="up">✅ 冬至限定，設明確下架日</span></td></tr>
+            <tr><td>🐟 鯖魚</td><td><span class="up">✅ 持續，可擴展 SKU</span></td></tr>
+            <tr><td>🌶️ 薑燒豬肉</td><td><span class="neutral">⬆️ 建議寒流期間加強曝光</span></td></tr>
+            <tr><td>🥬 大白菜/蘿蔔</td><td><span class="neutral">🆕 尚未出現，建議加入湯底</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+    </div>
+
+    <!-- Cost reduction strategies -->
+    <h3>食材降本四大策略</h3>
+    <div class="card">
+      <div class="card-header">💡 本土時令替換進口常規食材</div>
+      <table>
+        <thead><tr><th>現有品項</th><th>現用食材</th><th>替換建議</th><th>預估降本</th></tr></thead>
+        <tbody>
+          <tr><td>鮮蝦櫛瓜麵（夏季）</td><td>進口義大利櫛瓜</td><td>台灣絲瓜（7–9月）</td><td class="up">-40–60%</td></tr>
+          <tr><td>燉牛肉套餐醬汁（夏）</td><td>冬季醬汁配方</td><td>夏季鮮番茄版本</td><td class="up">-20%</td></tr>
+          <tr><td>嫩雞胸生菜沙拉</td><td>進口蘿美生菜</td><td>冬春台灣大陸妹/美生菜</td><td class="up">-30%</td></tr>
+          <tr><td>鯖魚定食（夏季）</td><td>冷凍鯖魚</td><td>旗魚/鬼頭刀（6–8月）</td><td class="up">-15–25%</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-header">🐟 魚類蛋白質全年輪替建議</div>
+      <table>
+        <thead><tr><th>月份</th><th>建議主力魚種</th><th>原因</th></tr></thead>
+        <tbody>
+          <tr><td>3–5月（春）</td><td>虱目魚、午仔魚</td><td>台灣本產春季</td></tr>
+          <tr><td>6–8月（夏）</td><td>旗魚、鬼頭刀</td><td>夏季漁獲旺季，油脂適中</td></tr>
+          <tr><td>9–11月（秋）</td><td>秋刀魚、白帶魚</td><td>秋季油脂最豐，煙燻成本低</td></tr>
+          <tr><td>12–2月（冬）</td><td>鯖魚（現有）✅</td><td>冬季品質最佳，已採用</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="card">
+      <div class="card-header">📅 節令行銷搭配食材故事</div>
+      <table>
+        <thead><tr><th>節令</th><th>時間</th><th>建議主題</th><th>核心食材</th></tr></thead>
+        <tbody>
+          <tr><td>春分</td><td>3/21</td><td>「春筍上市」限定定食</td><td>嫩筍</td></tr>
+          <tr><td>端午</td><td>6月</td><td>苦瓜清熱套餐</td><td>苦瓜</td></tr>
+          <tr><td>立秋</td><td>8/7</td><td>秋刀魚定食登場</td><td>秋刀魚</td></tr>
+          <tr><td>冬至</td><td>12月</td><td>湯圓甜品限定（已有！）</td><td>湯圓 ✅</td></tr>
+          <tr><td>臘月禮盒</td><td>1月</td><td>精品咖啡豆年節禮盒（已有！）</td><td>精品咖啡豆 ✅</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="warn">⚠️ <strong>資料限制：</strong>POS 無進貨成本欄位，本次僅能從品名關鍵字推估食材使用量，無法計算確切毛利。觀測期僅涵蓋秋冬（11–2月），春夏行為需待 3 月起資料驗證。建議補充進貨單資料做精確成本率分析。</div>
+  </div>
+
   <!-- Session Notes -->
   <div id="sessions">
     <div class="section-title"><span class="icon">📝</span> Session 分析筆記</div>
@@ -425,7 +559,8 @@
           <tr><td>01</td><td>2026-03-15</td><td>資料清理與向量資料庫建立（美業訪談）</td></tr>
           <tr><td>02</td><td>2026-03-15</td><td>三維商業分析：獲客 × 體驗 × 回頭客</td></tr>
           <tr><td>03</td><td>2026-03-15</td><td>虎菇婆訂單 × 氣象資料整合、向量 DB 建立</td></tr>
-          <tr><td><strong>04</strong></td><td>2026-03-15</td><td><strong>行銷 × 營運 × 成本 三維洞察報告（本頁）</strong></td></tr>
+          <tr><td>04</td><td>2026-03-15</td><td>行銷 × 營運 × 成本 三維洞察報告</td></tr>
+          <tr><td><strong>05</strong></td><td>2026-03-15</td><td><strong>當季食材分析與全年菜單降本策略（本頁新增）</strong></td></tr>
         </tbody>
       </table>
     </div>
