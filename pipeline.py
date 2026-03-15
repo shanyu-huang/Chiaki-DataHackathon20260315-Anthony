@@ -10,7 +10,12 @@
 import csv
 import json
 import re
+import sys
 from pathlib import Path
+
+if sys.platform == "win32":
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    sys.stderr.reconfigure(encoding="utf-8", errors="replace")
 
 import chromadb
 from chromadb.utils import embedding_functions
