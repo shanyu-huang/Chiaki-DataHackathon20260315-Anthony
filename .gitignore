@@ -19,3 +19,12 @@ Thumbs.db
 # IDE
 .vscode/
 .idea/
+
+# 向量資料庫（本地生成，不需版控）
+vector_db/
+
+# sentence-transformers 模型快取
+.cache/
+
+# Claude Code 設定（本地端）
+.claude/
