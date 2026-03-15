@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>虎菇婆 × 黑客松 — 數據分析報告</title>
+<style>
+  :root {
+    --bg: #0f1117;
+    --card: #1a1d27;
+    --border: #2a2d3e;
+    --accent: #7c6af7;
+    --accent2: #4ecdc4;
+    --accent3: #f7c948;
+    --text: #e2e8f0;
+    --muted: #8892a4;
+    --green: #4ade80;
+    --red: #f87171;
+    --orange: #fb923c;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+    line-height: 1.7;
+  }
+  .hero {
+    background: linear-gradient(135deg, #1a0533 0%, #0f1117 50%, #001a1a 100%);
+    padding: 60px 24px 48px;
+    text-align: center;
+    border-bottom: 1px solid var(--border);
+  }
+  .hero h1 {
+    font-size: clamp(1.8rem, 5vw, 3rem);
+    font-weight: 800;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 12px;
+  }
+  .hero .sub {
+    color: var(--muted);
+    font-size: 1rem;
+    margin-bottom: 20px;
+  }
+  .badge-row {
+    display: flex; flex-wrap: wrap; justify-content: center; gap: 10px;
+  }
+  .badge {
+    background: var(--card); border: 1px solid var(--border);
+    padding: 4px 14px; border-radius: 20px; font-size: 0.82rem;
+    color: var(--accent2);
+  }
+  .container { max-width: 1100px; margin: 0 auto; padding: 40px 20px; }
+  .section-title {
+    font-size: 1.5rem; font-weight: 700; margin: 48px 0 24px;
+    padding-bottom: 12px;
+    border-bottom: 2px solid var(--border);
+    display: flex; align-items: center; gap: 10px;
+  }
+  .section-title .icon { font-size: 1.4rem; }
+
+  /* KPI Cards */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px; margin-bottom: 32px;
+  }
+  .kpi-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 20px 16px;
+    text-align: center;
+  }
+  .kpi-card .val {
+    font-size: 2rem; font-weight: 800;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .kpi-card .lbl { color: var(--muted); font-size: 0.85rem; margin-top: 4px; }
+
+  /* Tables */
+  .card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    overflow: hidden;
+    margin-bottom: 24px;
+  }
+  .card-header {
+    padding: 14px 20px;
+    background: rgba(124,106,247,0.08);
+    border-bottom: 1px solid var(--border);
+    font-weight: 600; font-size: 0.95rem;
+    display: flex; align-items: center; gap: 8px;
+  }
+  table { width: 100%; border-collapse: collapse; }
+  th {
+    background: rgba(255,255,255,0.03);
+    padding: 10px 16px; text-align: left;
+    font-size: 0.82rem; font-weight: 600;
+    color: var(--muted); text-transform: uppercase; letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--border);
+  }
+  td {
+    padding: 10px 16px;
+    font-size: 0.9rem;
+    border-bottom: 1px solid rgba(255,255,255,0.04);
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+  .num { text-align: right; font-variant-numeric: tabular-nums; }
+  .up { color: var(--green); font-weight: 600; }
+  .down { color: var(--red); }
+  .neutral { color: var(--accent3); }
+
+  /* Insight boxes */
+  .insight {
+    border-left: 3px solid var(--accent);
+    background: rgba(124,106,247,0.06);
+    border-radius: 0 8px 8px 0;
+    padding: 14px 18px;
+    margin: 16px 0;
+    font-size: 0.92rem;
+  }
+  .action {
+    border-left: 3px solid var(--accent2);
+    background: rgba(78,205,196,0.06);
+    border-radius: 0 8px 8px 0;
+    padding: 14px 18px;
+    margin: 16px 0;
+    font-size: 0.92rem;
+  }
+  .action strong { color: var(--accent2); }
+
+  /* Priority table */
+  .priority-high { color: var(--accent3); font-weight: 700; }
+  .priority-mid  { color: var(--orange); }
+  .priority-low  { color: var(--muted); }
+
+  /* Bar vis */
+  .bar-wrap { display: flex; align-items: center; gap: 10px; }
+  .bar {
+    height: 8px; border-radius: 4px;
+    background: linear-gradient(90deg, var(--accent), var(--accent2));
+    min-width: 4px;
+  }
+
+  /* Formula block */
+  .formula {
+    background: #0d1117;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px 20px;
+    font-family: 'Consolas', 'Fira Code', monospace;
+    font-size: 0.88rem;
+    color: var(--accent2);
+    margin: 12px 0;
+    line-height: 1.9;
+  }
+
+  /* Warning */
+  .warn {
+    border-left: 3px solid var(--accent3);
+    background: rgba(247,201,72,0.06);
+    border-radius: 0 8px 8px 0;
+    padding: 14px 18px;
+    margin: 16px 0;
+    font-size: 0.88rem;
+    color: var(--accent3);
+  }
+
+  /* Section nav */
+  .nav {
+    display: flex; flex-wrap: wrap; gap: 10px;
+    margin-bottom: 40px;
+    padding: 20px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+  .nav a {
+    color: var(--accent); text-decoration: none;
+    font-size: 0.88rem; padding: 4px 12px;
+    border: 1px solid var(--accent);
+    border-radius: 20px;
+    transition: background 0.2s;
+  }
+  .nav a:hover { background: rgba(124,106,247,0.15); }
+  .footer {
+    text-align: center; padding: 40px 20px;
+    color: var(--muted); font-size: 0.82rem;
+    border-top: 1px solid var(--border);
+  }
+  h3 { font-size: 1.05rem; margin: 20px 0 10px; color: var(--accent2); }
+  p { margin-bottom: 10px; }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>虎菇婆 數據分析報告</h1>
+  <p class="sub">內部數據分析黑客松 2026-03-15 ｜ 行銷 × 營運 × 成本 三維洞察</p>
+  <div class="badge-row">
+    <span class="badge">📦 2,963 筆訂單</span>
+    <span class="badge">📅 2025-11-24 ~ 2026-02-22</span>
+    <span class="badge">🌡️ 氣溫 10–30℃</span>
+    <span class="badge">🌧️ 降雨 0–1.4mm</span>
+    <span class="badge">🤖 multilingual-e5-small</span>
+  </div>
+</div>
+
+<div class="container">
+
+  <!-- Navigation -->
+  <div class="nav">
+    <a href="#overview">總覽</a>
+    <a href="#marketing">行銷端</a>
+    <a href="#operations">營運端</a>
+    <a href="#costs">成本端</a>
+    <a href="#actions">行動建議</a>
+    <a href="#sessions">Session 筆記</a>
+  </div>
+
+  <!-- KPI Overview -->
+  <div id="overview">
+    <div class="section-title"><span class="icon">📊</span> 業態總覽</div>
+    <div class="kpi-grid">
+      <div class="kpi-card"><div class="val">2,963</div><div class="lbl">總訂單筆數</div></div>
+      <div class="kpi-card"><div class="val">630元</div><div class="lbl">平均客單價</div></div>
+      <div class="kpi-card"><div class="val">36筆</div><div class="lbl">平均日訂單（晴天）</div></div>
+      <div class="kpi-card"><div class="val">868元</div><div class="lbl">精品豆均單（最高毛利）</div></div>
+      <div class="kpi-card"><div class="val">1,479元</div><div class="lbl">春節均客單（峰值）</div></div>
+      <div class="kpi-card"><div class="val">53.8筆</div><div class="lbl">週日日均訂單（最旺）</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">🍽️ 品項結構分析</div>
+      <table>
+        <thead><tr><th>品項類型</th><th>訂單佔比</th><th>平均客單</th><th>佔比視覺化</th></tr></thead>
+        <tbody>
+          <tr><td>含「飯」（定食/套餐）</td><td class="num">53.2%</td><td class="num">599 元</td><td><div class="bar-wrap"><div class="bar" style="width:53%"></div></div></td></tr>
+          <tr><td>含「湯」</td><td class="num">37.9%</td><td class="num">583 元</td><td><div class="bar-wrap"><div class="bar" style="width:38%"></div></div></td></tr>
+          <tr><td>含「豬」（主菜）</td><td class="num">35.8%</td><td class="num">617 元</td><td><div class="bar-wrap"><div class="bar" style="width:36%"></div></div></td></tr>
+          <tr><td>含「雞」</td><td class="num">19.1%</td><td class="num">589 元</td><td><div class="bar-wrap"><div class="bar" style="width:19%"></div></div></td></tr>
+          <tr><td>含「咖啡」</td><td class="num">17.0%</td><td class="num">565 元</td><td><div class="bar-wrap"><div class="bar" style="width:17%"></div></div></td></tr>
+          <tr><td>精品豆（濾掛/單品）</td><td class="num"><span class="neutral">3.4%</span></td><td class="num"><span class="up">868 元 ⭐</span></td><td><div class="bar-wrap"><div class="bar" style="width:3%;background:linear-gradient(90deg,#f7c948,#fb923c)"></div></div></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="insight">💡 <strong>業態定位：</strong>虎菇婆是「精品咖啡 × 定食」複合型店家。精品豆雖然只佔 3.4% 訂單，但均單高達 868 元，且春節期間單筆最高達 <strong>10,620 元</strong>，是最高毛利的品項類別。</div>
+  </div>
+
+  <!-- Marketing -->
+  <div id="marketing">
+    <div class="section-title"><span class="icon">📣</span> 一、行銷端 (Marketing)</div>
+
+    <h3>1-A　雨天 × 外帶品項相關性</h3>
+    <div class="card">
+      <div class="card-header">🌧️ 降雨量 vs 用餐型態比率</div>
+      <table>
+        <thead><tr><th>降雨量</th><th class="num">內用佔比</th><th class="num">外帶佔比</th><th class="num">自取佔比</th></tr></thead>
+        <tbody>
+          <tr><td>無雨（0mm）</td><td class="num">80.5%</td><td class="num">13.7%</td><td class="num">5.8%</td></tr>
+          <tr><td>微雨（&lt; 1mm）</td><td class="num">75.1%</td><td class="num up">22.0% ↑</td><td class="num down">2.9% ↓</td></tr>
+          <tr><td>中雨（1–5mm）</td><td class="num up">90.0% ↑</td><td class="num down">10.0% ↓</td><td class="num down">0%</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="insight">📌 <strong>雨天外帶訂單 100% 為咖啡類</strong>（晴天外帶咖啡僅 29.7%）。微雨時外帶 +4.3 個百分點，中雨時客人轉為留店內用或不外出。</div>
+    <div class="action"><strong>⚡ 行動建議：</strong>預報降雨時在店頭黑板 + 快一點平台推「雨天限定：咖啡外帶 9 折 + 濾掛袋裝優惠」，將外帶咖啡客轉換為精品豆購買。</div>
+
+    <h3>1-B　平日 vs 週末 × 時段銷售結構</h3>
+    <div class="card">
+      <div class="card-header">📅 星期幾 × 日均訂單量</div>
+      <table>
+        <thead><tr><th>星期</th><th class="num">日均訂單</th><th class="num">特性</th></tr></thead>
+        <tbody>
+          <tr><td>週一</td><td class="num">30.5</td><td></td></tr>
+          <tr><td>週二</td><td class="num">29.9</td><td></td></tr>
+          <tr><td>週三</td><td class="num">28.5</td><td>最低峰</td></tr>
+          <tr><td>週四</td><td class="num">31.0</td><td></td></tr>
+          <tr><td>週五</td><td class="num">29.3</td><td></td></tr>
+          <tr><td>週六</td><td class="num up">45.9</td><td>週末尖峰</td></tr>
+          <tr><td>週日</td><td class="num up">53.8 🏆</td><td>全週最旺</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="card">
+      <div class="card-header">⏰ 時段 × 日均訂單 × 均客單</div>
+      <table>
+        <thead><tr><th>時段</th><th class="num">日均訂單</th><th class="num">均客單</th><th>特性</th></tr></thead>
+        <tbody>
+          <tr><td>10 時</td><td class="num">0.5</td><td class="num">310 元</td><td class="muted">極低峰</td></tr>
+          <tr><td>11 時</td><td class="num">3.9</td><td class="num neutral">1,192 元</td><td>含禮盒/精品豆採購</td></tr>
+          <tr><td>12 時</td><td class="num up">5.2 🍱</td><td class="num">532 元</td><td><strong>午餐尖峰</strong></td></tr>
+          <tr><td>13 時</td><td class="num">4.4</td><td class="num">645 元</td><td>午餐延伸</td></tr>
+          <tr><td>14 時</td><td class="num">2.8</td><td class="num">497 元</td><td></td></tr>
+          <tr><td>15 時</td><td class="num">2.2</td><td class="num">565 元</td><td></td></tr>
+          <tr><td>16 時</td><td class="num down">1.9 ⬇</td><td class="num">473 元</td><td>低峰空窗帶</td></tr>
+          <tr><td>17 時</td><td class="num">3.6</td><td class="num">592 元</td><td></td></tr>
+          <tr><td>18 時</td><td class="num up">5.5 🍽️</td><td class="num">526 元</td><td><strong>晚餐尖峰</strong></td></tr>
+          <tr><td>19 時</td><td class="num">4.2</td><td class="num">474 元</td><td></td></tr>
+          <tr><td>20 時</td><td class="num">1.5</td><td class="num up">874 元 ⭐</td><td>目的性購豆</td></tr>
+          <tr><td>21 時</td><td class="num">0.4</td><td class="num up">1,337 元 ⭐</td><td>超高客單</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="action"><strong>⚡ 促銷組合建議：</strong>
+      <br>・<strong>平日午間（12–13 時）</strong>：快速定食套 280/320 元，出餐 &lt; 10 分鐘，吸引上班族
+      <br>・<strong>週末全天</strong>：雙人分享套餐 + 精品豆試喝一杯，提升轉換率
+      <br>・<strong>16 時空窗帶</strong>：限量 5 份「下午剩食組合」8 折，消化午餐剩料
+    </div>
+  </div>
+
+  <!-- Operations -->
+  <div id="operations">
+    <div class="section-title"><span class="icon">⚙️</span> 二、營運端 (Operations)</div>
+
+    <h3>2-A　氣溫 × 熱食/冷飲 備料預測</h3>
+    <div class="card">
+      <div class="card-header">🌡️ 氣溫區間 × 品項類型比率</div>
+      <table>
+        <thead><tr><th>氣溫區間</th><th class="num">含湯/熱食</th><th class="num">含咖啡</th><th class="num">含冰/涼/沙拉</th></tr></thead>
+        <tbody>
+          <tr><td>&lt; 15℃</td><td class="num up">67.2% ↑</td><td class="num">13.6%</td><td class="num">11.4%</td></tr>
+          <tr><td>15–18℃</td><td class="num">59.0%</td><td class="num">16.3%</td><td class="num">15.1%</td></tr>
+          <tr><td>18–22℃</td><td class="num">57.2%</td><td class="num">15.8%</td><td class="num">20.1%</td></tr>
+          <tr><td>&gt; 22℃</td><td class="num down">47.7% ↓</td><td class="num up">22.5% ↑</td><td class="num up">28.4% ↑</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="insight">📌 <strong>量化假設：</strong>氣溫低於 15℃，含湯/熱食訂單比率比 &gt; 22℃ 時高出 <strong>+19.5 個百分點</strong>。氣溫超過 22℃，冰/涼/沙拉類比率上升 <strong>+16.9 個百分點</strong>。</div>
+    <div class="formula">
+湯品備料量 = 基準量 × 氣溫係數<br>
+<br>
+氣溫 &lt; 15℃  →  ×1.20  （備 +20%）<br>
+氣溫 15–18℃ →  ×1.05<br>
+氣溫 18–22℃ →  ×1.00  （基準）<br>
+氣溫 &gt; 22℃  →  ×0.85  （備 -15%，改增沙拉/冷品）
+    </div>
+
+    <h3>2-B　假期客流 × 人力排班</h3>
+    <div class="card">
+      <div class="card-header">🧧 春節前後業績對比（反直覺發現）</div>
+      <table>
+        <thead><tr><th>時段</th><th class="num">日均訂單</th><th class="num">均客單</th><th>說明</th></tr></thead>
+        <tbody>
+          <tr><td>春節前一週（1/21–1/27）</td><td class="num">29.3 筆</td><td class="num">496 元</td><td>正常水準</td></tr>
+          <tr><td><strong>春節期間（1/28–2/2）</strong></td><td class="num up"><strong>40.2 筆 ↑37%</strong></td><td class="num up"><strong>1,479 元 ↑198%</strong></td><td>精品豆禮盒採購季</td></tr>
+          <tr><td>春節後一週（2/3–2/9）</td><td class="num">38.1 筆</td><td class="num">653 元</td><td>仍高於正常</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="warn">⚠️ <strong>反直覺提醒：</strong>春節期間日均訂單 +37%，均客單 +198%，最大單筆 <strong>10,620 元</strong>（精品咖啡豆禮盒）。若依一般餐廳邏輯縮班或關店，將錯失本店最高客單的黃金時段！</div>
+    <div class="action"><strong>⚡ 行動建議：</strong>
+      <br>・春節前 3 天：加派 1 人專責包裝禮盒
+      <br>・春節週：增設精品豆禮盒展示區，維持正常班表
+      <br>・春節後首週：正常班表，客流自然衰退
+    </div>
+  </div>
+
+  <!-- Costs -->
+  <div id="costs">
+    <div class="section-title"><span class="icon">💰</span> 三、成本端 (Costs)</div>
+
+    <h3>3-A　雨天 × 食材成本調整</h3>
+    <div class="card">
+      <div class="card-header">🥗 雨季菜單調整策略</div>
+      <table>
+        <thead><tr><th>調整方向</th><th>具體做法</th></tr></thead>
+        <tbody>
+          <tr><td>葉菜改根莖類</td><td>沙拉底從生菜 → 涼拌高麗菜 / 川燙花椰菜（耐儲、損耗率低）</td></tr>
+          <tr><td>雨天推湯品升級</td><td>氣溫 &lt; 18℃ 且預報有雨：湯品升級加購 +50 元換大碗</td></tr>
+          <tr><td>主打精品豆</td><td>熟豆 / 濾掛袋裝損耗率極低，雨季主打禮盒降低葉菜依賴</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <h3>3-B　低峰時段 × 食材浪費 × 離峰促銷</h3>
+    <div class="card">
+      <div class="card-header">⏱️ 低峰時段分析</div>
+      <table>
+        <thead><tr><th>時段</th><th class="num">日均訂單</th><th class="num">均客單</th><th>建議方案</th></tr></thead>
+        <tbody>
+          <tr><td>10 時</td><td class="num">0.5 筆</td><td class="num">310 元</td><td>早鳥試喝：買豆折抵，轉換精品豆購買</td></tr>
+          <tr><td><strong>16 時</strong></td><td class="num down">1.9 筆</td><td class="num">473 元</td><td>限量 5 份剩食組合 8 折，消化午餐剩料</td></tr>
+          <tr><td>20–21 時</td><td class="num">0.4–1.5 筆</td><td class="num up">874–1,337 元</td><td>⛔ 不促銷——目的性購豆客，不需折扣</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Action Summary -->
+  <div id="actions">
+    <div class="section-title"><span class="icon">🎯</span> 行動建議彙整</div>
+    <div class="card">
+      <div class="card-header">優先行動清單</div>
+      <table>
+        <thead><tr><th>優先</th><th>面向</th><th>行動</th><th>預期效益</th></tr></thead>
+        <tbody>
+          <tr><td class="priority-high">⭐⭐⭐</td><td>行銷</td><td>春節前 2 週推精品豆禮盒組合</td><td>複製 1/28 高客單模式</td></tr>
+          <tr><td class="priority-high">⭐⭐⭐</td><td>營運</td><td>氣溫 &lt; 15℃ 湯品備料 +20%</td><td>減少缺貨、提升滿桌率</td></tr>
+          <tr><td class="priority-mid">⭐⭐</td><td>行銷</td><td>微雨日推「雨天外帶咖啡 9 折」</td><td>留住外帶咖啡客</td></tr>
+          <tr><td class="priority-mid">⭐⭐</td><td>行銷</td><td>週末雙人套餐 + 精品豆試喝</td><td>提升精品豆轉換率</td></tr>
+          <tr><td class="priority-mid">⭐⭐</td><td>成本</td><td>雨季配菜改根莖類</td><td>降低葉菜損耗</td></tr>
+          <tr><td class="priority-low">⭐</td><td>成本</td><td>16 時剩食組合限量促銷</td><td>消化剩料、吸引下午茶客</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- Session Notes -->
+  <div id="sessions">
+    <div class="section-title"><span class="icon">📝</span> Session 分析筆記</div>
+    <div class="card">
+      <div class="card-header">歷次分析記錄</div>
+      <table>
+        <thead><tr><th>Session</th><th>日期</th><th>主題</th></tr></thead>
+        <tbody>
+          <tr><td>01</td><td>2026-03-15</td><td>資料清理與向量資料庫建立（美業訪談）</td></tr>
+          <tr><td>02</td><td>2026-03-15</td><td>三維商業分析：獲客 × 體驗 × 回頭客</td></tr>
+          <tr><td>03</td><td>2026-03-15</td><td>虎菇婆訂單 × 氣象資料整合、向量 DB 建立</td></tr>
+          <tr><td><strong>04</strong></td><td>2026-03-15</td><td><strong>行銷 × 營運 × 成本 三維洞察報告（本頁）</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="insight">💬 <strong>下次對話還原上下文：</strong>請說「讀取 session_notes/ 目錄下所有 .md 檔，繼續協助分析虎菇婆訂單。」</div>
+  </div>
+
+</div>
+
+<div class="footer">
+  <p>虎菇婆 × 內部數據分析黑客松 2026-03-15</p>
+  <p>由 Claude（Anthropic）輔助分析 ｜ <a href="https://github.com/shanyu-huang/Chiaki-DataHackathon20260315-Anthony" style="color:var(--accent)">GitHub Repository</a></p>
+</div>
+
+</body>
+</html>
