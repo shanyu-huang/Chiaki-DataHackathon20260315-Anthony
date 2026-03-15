@@ -22,6 +22,7 @@ Thumbs.db
 
 # 向量資料庫（本地生成，不需版控）
 vector_db/
+restaurant-tiger/vector_db_tiger/
 
 # sentence-transformers 模型快取
 .cache/
